@@ -6,6 +6,13 @@ import javax.swing.*;
 
 public class Chess {
 
+  final static Color WHITE_SQUARE = new Color(128, 128, 128);
+  final static Color BLACK_SQUARE = new Color(64, 64, 64);
+  final static Color WHITE_PIECE = new Color(255, 255, 240);
+  final static Color BLACK_PIECE = new Color(32, 22, 11);
+
+  enum PieceColor { WHITE, BLACK }
+
   record PieceSet(
     String king,
     String queen,
@@ -15,15 +22,7 @@ public class Chess {
     String pawn
   ) {}
 
-  public static final PieceSet WHITE_PIECES = new PieceSet(
-    "♔",
-    "♕",
-    "♖",
-    "♗",
-    "♘",
-    "♙"
-  );
-  public static final PieceSet BLACK_PIECES = new PieceSet(
+  public static final PieceSet PIECES = new PieceSet(
     "♚",
     "♛",
     "♜",
@@ -43,13 +42,13 @@ public class Chess {
     JFrame frame = new JFrame("Boggle");
     frame.setSize(WIDTH, HEIGHT);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.add(new GUIBoard(Color.BLACK, Color.WHITE));
+    frame.add(new GUIBoard(BLACK_SQUARE, WHITE_SQUARE));
     frame.setVisible(true);
     frame.toFront();
     frame.requestFocus();
   }
 
-  private static record Piece(String string) {}
+  private static record Piece(String string, PieceColor color) {}
 
   public static class Square {
 
@@ -90,24 +89,25 @@ public class Chess {
         }
       }
 
-      placeInitialPieces(WHITE_PIECES, 6);
-      placeInitialPieces(BLACK_PIECES, 1);
+      placeInitialPieces(PIECES, PieceColor.WHITE);
+      placeInitialPieces(PIECES, PieceColor.BLACK);
     }
 
-    public void placeInitialPieces(PieceSet pieces, int pawnRank) {
-      int pieceRank = pawnRank == 1 ? 0 : 7;
+    public void placeInitialPieces(PieceSet pieces, PieceColor color) {
+      int pieceRank = color == PieceColor.WHITE ? 7 : 0;
+      int pawnRank = color == PieceColor.WHITE ? 6 : 1;
 
-      placePiece(new Piece(pieces.rook()), pieceRank, 0);
-      placePiece(new Piece(pieces.knight()), pieceRank, 1);
-      placePiece(new Piece(pieces.bishop()), pieceRank, 2);
-      placePiece(new Piece(pieces.king()), pieceRank, 3);
-      placePiece(new Piece(pieces.queen()), pieceRank, 4);
-      placePiece(new Piece(pieces.bishop()), pieceRank, 5);
-      placePiece(new Piece(pieces.knight()), pieceRank, 6);
-      placePiece(new Piece(pieces.rook()), pieceRank, 7);
+      placePiece(new Piece(pieces.rook(), color), pieceRank, 0);
+      placePiece(new Piece(pieces.knight(), color), pieceRank, 1);
+      placePiece(new Piece(pieces.bishop(), color), pieceRank, 2);
+      placePiece(new Piece(pieces.queen(), color), pieceRank, 3);
+      placePiece(new Piece(pieces.king(), color), pieceRank, 4);
+      placePiece(new Piece(pieces.bishop(), color), pieceRank, 5);
+      placePiece(new Piece(pieces.knight(), color), pieceRank, 6);
+      placePiece(new Piece(pieces.rook(), color), pieceRank, 7);
 
       for (var i = 0; i < 8; i++) {
-        placePiece(new Piece(pieces.pawn()), pawnRank, i);
+        placePiece(new Piece(pieces.pawn(), color), pawnRank, i);
       }
     }
 
@@ -181,14 +181,15 @@ public class Chess {
       }
     }
 
-    void drawPiece(Graphics g, String piece, int rank, int file) {
+    void drawPiece(Graphics g, Piece piece, int rank, int file) {
       var hSize = squareWidth();
       var vSize = squareHeight();
-      g.setColor(Color.BLUE);
+      g.setColor(piece.color() == PieceColor.WHITE ? WHITE_PIECE : BLACK_PIECE);
+
       g.setFont(g.getFont().deriveFont((float) squareWidth()));
       // FIXME: use font metrics to position text exactly.
       g.drawString(
-        piece,
+        piece.string(),
         (int) (file * hSize + hSize * 0.1),
         (int) (rank * vSize + vSize * 0.75)
       );
@@ -208,7 +209,7 @@ public class Chess {
             g.fillRect((int)(c * hSize), (int)(r * vSize), (int)hSize, (int)vSize);
           }
           if (board.hasPiece(r, c)) {
-            drawPiece(g, board.getPiece(r, c).string(), r, c);
+            drawPiece(g, board.getPiece(r, c), r, c);
           }
         }
       }
