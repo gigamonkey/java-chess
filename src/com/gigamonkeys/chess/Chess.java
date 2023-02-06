@@ -11,8 +11,6 @@ public class Chess {
   final static Color WHITE_PIECE = new Color(255, 255, 240);
   final static Color BLACK_PIECE = new Color(32, 22, 11);
 
-  enum PieceColor { WHITE, BLACK }
-
   private static final int WIDTH = 800;
   private static final int HEIGHT = 800;
 
@@ -30,7 +28,7 @@ public class Chess {
     frame.requestFocus();
   }
 
-  private static record Piece(String string, PieceColor color) {}
+  private static record Piece(String string, Color color) {}
 
   public static class Square {
 
@@ -71,13 +69,13 @@ public class Chess {
         }
       }
 
-      placeInitialPieces(PieceColor.WHITE);
-      placeInitialPieces(PieceColor.BLACK);
+      placeInitialPieces(WHITE_PIECE);
+      placeInitialPieces(BLACK_PIECE);
     }
 
-    public void placeInitialPieces(PieceColor color) {
-      int pieceRank = color == PieceColor.WHITE ? 7 : 0;
-      int pawnRank = color == PieceColor.WHITE ? 6 : 1;
+    public void placeInitialPieces(Color color) {
+      int pieceRank = color == WHITE_PIECE ? 7 : 0;
+      int pawnRank = color == WHITE_PIECE ? 6 : 1;
 
       placePiece(new Piece("♜", color), pieceRank, 0);
       placePiece(new Piece("♞", color), pieceRank, 1);
@@ -166,7 +164,7 @@ public class Chess {
     void drawPiece(Graphics g, Piece piece, int rank, int file) {
       var hSize = squareWidth();
       var vSize = squareHeight();
-      g.setColor(piece.color() == PieceColor.WHITE ? WHITE_PIECE : BLACK_PIECE);
+      g.setColor(piece.color());
 
       g.setFont(g.getFont().deriveFont((float) squareWidth()));
       // FIXME: use font metrics to position text exactly.
