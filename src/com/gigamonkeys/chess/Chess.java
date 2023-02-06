@@ -1,18 +1,39 @@
 package com.gigamonkeys.chess;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
 public class Chess {
 
-  record PieceSet(String king, String queen, String rook, String bishop, String knight, String pawn) {}
+  record PieceSet(
+    String king,
+    String queen,
+    String rook,
+    String bishop,
+    String knight,
+    String pawn
+  ) {}
 
-  public final static PieceSet WHITE_PIECES = new PieceSet("♔", "♕", "♖", "♗", "♘", "♙");
-  public final static PieceSet BLACK_PIECES = new PieceSet("♚", "♛", "♜", "♝", "♞", "♟");
+  public static final PieceSet WHITE_PIECES = new PieceSet(
+    "♔",
+    "♕",
+    "♖",
+    "♗",
+    "♘",
+    "♙"
+  );
+  public static final PieceSet BLACK_PIECES = new PieceSet(
+    "♚",
+    "♛",
+    "♜",
+    "♝",
+    "♞",
+    "♟"
+  );
 
-  private final static int WIDTH = 800;
-  private final static int HEIGHT = 800;
+  private static final int WIDTH = 800;
+  private static final int HEIGHT = 800;
 
   public static void main(String[] argv) {
     SwingUtilities.invokeLater(() -> new Chess().makeFrame());
@@ -53,7 +74,9 @@ public class Chess {
       this.piece = null;
     }
 
-    public String toString() { return rank + "/" + file; }
+    public String toString() {
+      return rank + "/" + file;
+    }
   }
 
   private static class Board {
@@ -61,7 +84,6 @@ public class Chess {
     private Square[][] squares = new Square[8][8];
 
     public Board() {
-
       for (var rank = 0; rank < 8; rank++) {
         for (var file = 0; file < 8; file++) {
           squares[rank][file] = new Square(rank, file);
@@ -73,7 +95,6 @@ public class Chess {
     }
 
     public void placeInitialPieces(PieceSet pieces, int pawnRank) {
-
       int pieceRank = pawnRank == 1 ? 0 : 7;
 
       placePiece(new Piece(pieces.rook()), pieceRank, 0);
@@ -119,11 +140,13 @@ public class Chess {
     GUIBoard(Color black, Color white) {
       this.black = black;
       this.white = white;
-      this.addMouseListener(new MouseAdapter() {
-        public void mouseClicked(MouseEvent e) {
-          maybeMove(e.getX(), e.getY());
-        }
-      });
+      this.addMouseListener(
+          new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+              maybeMove(e.getX(), e.getY());
+            }
+          }
+        );
     }
 
     public double squareWidth() {
@@ -135,11 +158,11 @@ public class Chess {
     }
 
     public int rank(double y) {
-      return (int)Math.floor(y / squareHeight());
+      return (int) Math.floor(y / squareHeight());
     }
 
     public int file(double x) {
-      return (int)Math.floor(x / squareWidth());
+      return (int) Math.floor(x / squareWidth());
     }
 
     void maybeMove(int x, int y) {
@@ -162,8 +185,12 @@ public class Chess {
       var hSize = getWidth() / 8;
       var vSize = getHeight() / 8;
       g.setColor(Color.BLUE);
-      g.setFont(g.getFont().deriveFont((float)squareWidth()));
-      g.drawString(piece, (int)(file * hSize + hSize * 0.1), (int)(rank * vSize + vSize * 0.75));
+      g.setFont(g.getFont().deriveFont((float) squareWidth()));
+      g.drawString(
+        piece,
+        (int) (file * hSize + hSize * 0.1),
+        (int) (rank * vSize + vSize * 0.75)
+      );
     }
 
     public void paintComponent(Graphics g) {
