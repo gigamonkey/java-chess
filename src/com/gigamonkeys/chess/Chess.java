@@ -13,24 +13,6 @@ public class Chess {
 
   enum PieceColor { WHITE, BLACK }
 
-  record PieceSet(
-    String king,
-    String queen,
-    String rook,
-    String bishop,
-    String knight,
-    String pawn
-  ) {}
-
-  public static final PieceSet PIECES = new PieceSet(
-    "♚",
-    "♛",
-    "♜",
-    "♝",
-    "♞",
-    "♟"
-  );
-
   private static final int WIDTH = 800;
   private static final int HEIGHT = 800;
 
@@ -89,25 +71,25 @@ public class Chess {
         }
       }
 
-      placeInitialPieces(PIECES, PieceColor.WHITE);
-      placeInitialPieces(PIECES, PieceColor.BLACK);
+      placeInitialPieces(PieceColor.WHITE);
+      placeInitialPieces(PieceColor.BLACK);
     }
 
-    public void placeInitialPieces(PieceSet pieces, PieceColor color) {
+    public void placeInitialPieces(PieceColor color) {
       int pieceRank = color == PieceColor.WHITE ? 7 : 0;
       int pawnRank = color == PieceColor.WHITE ? 6 : 1;
 
-      placePiece(new Piece(pieces.rook(), color), pieceRank, 0);
-      placePiece(new Piece(pieces.knight(), color), pieceRank, 1);
-      placePiece(new Piece(pieces.bishop(), color), pieceRank, 2);
-      placePiece(new Piece(pieces.queen(), color), pieceRank, 3);
-      placePiece(new Piece(pieces.king(), color), pieceRank, 4);
-      placePiece(new Piece(pieces.bishop(), color), pieceRank, 5);
-      placePiece(new Piece(pieces.knight(), color), pieceRank, 6);
-      placePiece(new Piece(pieces.rook(), color), pieceRank, 7);
+      placePiece(new Piece("♜", color), pieceRank, 0);
+      placePiece(new Piece("♞", color), pieceRank, 1);
+      placePiece(new Piece("♝", color), pieceRank, 2);
+      placePiece(new Piece("♛", color), pieceRank, 3);
+      placePiece(new Piece("♚", color), pieceRank, 4);
+      placePiece(new Piece("♝", color), pieceRank, 5);
+      placePiece(new Piece("♞", color), pieceRank, 6);
+      placePiece(new Piece("♜", color), pieceRank, 7);
 
       for (var i = 0; i < 8; i++) {
-        placePiece(new Piece(pieces.pawn(), color), pawnRank, i);
+        placePiece(new Piece("♟", color), pawnRank, i);
       }
     }
 
