@@ -29,11 +29,8 @@ public class Chess {
   private void makeFrame() {
     JFrame frame = new JFrame("Boggle");
     frame.setSize(WIDTH, HEIGHT);
-    frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     frame.add(new GUIBoard(Color.BLACK, Color.WHITE));
-
     frame.setVisible(true);
     frame.toFront();
     frame.requestFocus();
@@ -111,17 +108,28 @@ public class Chess {
       this.board = new Board();
     }
 
+    public double squareSize() {
+      // FIXME: this relies on the board itself being square.
+      return getWidth() / 8;
+    }
+
+    public int rank(double y) {
+      return (int)Math.floor(y / squareSize());
+    }
+
+    public int file(double x) {
+      return (int)Math.floor(x / squareSize());
+    }
+
     void foo(int x, int y) {
-      int rank = (int)Math.floor((double)y / (double)(getHeight() / 8));
-      int file = (int)Math.floor((double)x / (double)(getWidth() / 8));
-      System.out.println("Rank: " + rank + "; File: " + file);
+      System.out.println("Rank: " + rank(y) + "; File: " + file(x));
     }
 
     void drawPiece(Graphics g, String piece, int rank, int file) {
       var hSize = getWidth() / 8;
       var vSize = getHeight() / 8;
       g.setColor(Color.BLUE);
-      g.setFont(g.getFont().deriveFont((float)hSize));
+      g.setFont(g.getFont().deriveFont((float)squareSize()));
       g.drawString(piece, (int)(file * hSize + hSize * 0.1), (int)(rank * vSize + vSize * 0.75));
     }
 
