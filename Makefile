@@ -2,7 +2,7 @@ sources := $(shell find -name '*.java')
 main := com.gigamonkeys.chess.Chess
 resources :=
 
-all: build
+all: build run
 
 build: compile resources
 
