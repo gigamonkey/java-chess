@@ -48,6 +48,12 @@ public class Chess {
     public Piece getPiece() {
       return this.piece;
     }
+
+    public void removePiece() {
+      this.piece = null;
+    }
+
+    public String toString() { return rank + "/" + file; }
   }
 
   private static class Board {
@@ -78,6 +84,7 @@ public class Chess {
       placePiece(new Piece(pieces.bishop()), pieceRank, 5);
       placePiece(new Piece(pieces.knight()), pieceRank, 6);
       placePiece(new Piece(pieces.rook()), pieceRank, 7);
+
       for (var i = 0; i < 8; i++) {
         placePiece(new Piece(pieces.pawn()), pawnRank, i);
       }
@@ -91,6 +98,10 @@ public class Chess {
       return squares[rank][file].getPiece();
     }
 
+    public Square getSquare(int rank, int file) {
+      return squares[rank][file];
+    }
+
     public void placePiece(Piece p, int rank, int file) {
       squares[rank][file].setPiece(p);
     }
@@ -98,19 +109,21 @@ public class Chess {
 
   private static class GUIBoard extends JPanel {
 
+    private final Board board = new Board();
+
     private final Color black;
     private final Color white;
-    private final Board board;
+
+    private Square selectedSquare = null;
 
     GUIBoard(Color black, Color white) {
       this.black = black;
       this.white = white;
       this.addMouseListener(new MouseAdapter() {
         public void mouseClicked(MouseEvent e) {
-          foo(e.getX(), e.getY());
+          maybeMove(e.getX(), e.getY());
         }
       });
-      this.board = new Board();
     }
 
     public double squareSize() {
@@ -126,8 +139,20 @@ public class Chess {
       return (int)Math.floor(x / squareSize());
     }
 
-    void foo(int x, int y) {
-      System.out.println("Rank: " + rank(y) + "; File: " + file(x));
+    void maybeMove(int x, int y) {
+      var sq = board.getSquare(rank(y), file(x));
+      System.out.println("Clicked square " + sq);
+      if (selectedSquare == null && sq.getPiece() != null) {
+        System.out.println("Selecting square " + sq);
+        selectedSquare = sq;
+      } else if (selectedSquare != null) {
+        sq.setPiece(selectedSquare.getPiece());
+        selectedSquare.removePiece();
+        selectedSquare = null;
+        repaint();
+      } else {
+        System.out.println("Ignoring click in " + sq);
+      }
     }
 
     void drawPiece(Graphics g, String piece, int rank, int file) {
