@@ -6,8 +6,8 @@ import javax.swing.*;
 
 public class Chess {
 
-  final static Color WHITE_SQUARE = new Color(128, 128, 128);
-  final static Color BLACK_SQUARE = new Color(64, 64, 64);
+  final static Color WHITE_SQUARE = new Color(192, 192, 192);
+  final static Color BLACK_SQUARE = new Color(100, 100, 100);
   final static Color WHITE_PIECE = new Color(255, 255, 240);
   final static Color BLACK_PIECE = new Color(32, 22, 11);
 
@@ -121,12 +121,11 @@ public class Chess {
       this.black = black;
       this.white = white;
       this.addMouseListener(
-          new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-              maybeMove(e.getX(), e.getY());
-            }
+        new MouseAdapter() {
+          public void mouseClicked(MouseEvent e) {
+            maybeMove(e.getX(), e.getY());
           }
-        );
+        });
     }
 
     public double squareWidth() {
@@ -147,9 +146,9 @@ public class Chess {
 
     void maybeMove(int x, int y) {
       var sq = board.getSquare(rank(y), file(x));
-      System.out.println("Clicked square " + sq);
+      //System.out.println("Clicked square " + sq);
       if (selectedSquare == null && sq.getPiece() != null) {
-        System.out.println("Selecting square " + sq);
+        //System.out.println("Selecting square " + sq);
         selectedSquare = sq;
       } else if (selectedSquare != null) {
         sq.setPiece(selectedSquare.getPiece());
@@ -157,7 +156,7 @@ public class Chess {
         selectedSquare = null;
         repaint();
       } else {
-        System.out.println("Ignoring click in " + sq);
+        //System.out.println("Ignoring click in " + sq);
       }
     }
 
