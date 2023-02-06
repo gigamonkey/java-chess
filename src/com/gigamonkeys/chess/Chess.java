@@ -6,8 +6,10 @@ import java.awt.event.*;
 
 public class Chess {
 
-  public final static String[] WHITE_PIECES = {"♔", "♕", "♖", "♗", "♘", "♙"};
-  public final static String[] BLACK_PIECES = {"♚", "♛", "♜", "♝", "♞", "♟"};
+  record PieceSet(String king, String queen, String rook, String bishop, String knight, String pawn) {}
+
+  public final static PieceSet WHITE_PIECES = new PieceSet("♔", "♕", "♖", "♗", "♘", "♙");
+  public final static PieceSet BLACK_PIECES = new PieceSet("♚", "♛", "♜", "♝", "♞", "♟");
 
   private final static int WIDTH = 800;
   private final static int HEIGHT = 800;
@@ -60,24 +62,24 @@ public class Chess {
         }
       }
 
-      placeInitialPieces(BLACK_PIECES, 1);
       placeInitialPieces(WHITE_PIECES, 6);
+      placeInitialPieces(BLACK_PIECES, 1);
     }
 
-    public void placeInitialPieces(String[] pieces, int pawnRank) {
+    public void placeInitialPieces(PieceSet pieces, int pawnRank) {
 
       int pieceRank = pawnRank == 1 ? 0 : 7;
 
-      placePiece(new Piece(pieces[2]), pieceRank, 0);
-      placePiece(new Piece(pieces[4]), pieceRank, 1);
-      placePiece(new Piece(pieces[3]), pieceRank, 2);
-      placePiece(new Piece(pieces[0]), pieceRank, 3);
-      placePiece(new Piece(pieces[1]), pieceRank, 4);
-      placePiece(new Piece(pieces[3]), pieceRank, 5);
-      placePiece(new Piece(pieces[4]), pieceRank, 6);
-      placePiece(new Piece(pieces[2]), pieceRank, 7);
+      placePiece(new Piece(pieces.rook()), pieceRank, 0);
+      placePiece(new Piece(pieces.knight()), pieceRank, 1);
+      placePiece(new Piece(pieces.bishop()), pieceRank, 2);
+      placePiece(new Piece(pieces.king()), pieceRank, 3);
+      placePiece(new Piece(pieces.queen()), pieceRank, 4);
+      placePiece(new Piece(pieces.bishop()), pieceRank, 5);
+      placePiece(new Piece(pieces.knight()), pieceRank, 6);
+      placePiece(new Piece(pieces.rook()), pieceRank, 7);
       for (var i = 0; i < 8; i++) {
-        placePiece(new Piece(pieces[5]), pawnRank, i);
+        placePiece(new Piece(pieces.pawn()), pawnRank, i);
       }
     }
 
