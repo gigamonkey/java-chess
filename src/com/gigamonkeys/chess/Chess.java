@@ -2,6 +2,7 @@ package com.gigamonkeys.chess;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class Chess {
 
@@ -10,7 +11,6 @@ public class Chess {
 
   public static void main(String[] argv) {
     SwingUtilities.invokeLater(() -> new Chess().makeFrame());
-
   }
 
   private void makeFrame() {
@@ -19,7 +19,6 @@ public class Chess {
     frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    // Put stuff in frame.
     frame.add(new GUIBoard(Color.BLACK, Color.WHITE));
 
     frame.setVisible(true);
@@ -35,6 +34,17 @@ public class Chess {
     GUIBoard(Color black, Color white) {
       this.black = black;
       this.white = white;
+      this.addMouseListener(new MouseAdapter() {
+        public void mouseClicked(MouseEvent e) {
+          foo(e.getX(), e.getY());
+        }
+      });
+    }
+
+    void foo(int x, int y) {
+      int rank = (int)Math.floor((double)y / (double)(getHeight() / 8));
+      int file = (int)Math.floor((double)x / (double)(getWidth() / 8));
+      System.out.println("Rank: " + rank + "; File: " + file);
     }
 
     public void paintComponent(Graphics g) {
@@ -48,13 +58,10 @@ public class Chess {
       for (var r = 0; r < 8; r++) {
         for (var c = 0; c < 8; c++) {
           if ((r + c) % 2 == 0) {
-            var x = r * hSize;
-            var y = c * vSize;
-            g.fillRect(x, y, hSize, vSize);
+            g.fillRect(c * hSize, r * vSize, hSize, vSize);
           }
         }
       }
     }
   }
-
 }
