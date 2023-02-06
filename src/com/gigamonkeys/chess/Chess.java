@@ -182,10 +182,11 @@ public class Chess {
     }
 
     void drawPiece(Graphics g, String piece, int rank, int file) {
-      var hSize = getWidth() / 8;
-      var vSize = getHeight() / 8;
+      var hSize = squareWidth();
+      var vSize = squareHeight();
       g.setColor(Color.BLUE);
       g.setFont(g.getFont().deriveFont((float) squareWidth()));
+      // FIXME: use font metrics to position text exactly.
       g.drawString(
         piece,
         (int) (file * hSize + hSize * 0.1),
@@ -197,14 +198,14 @@ public class Chess {
       g.setColor(black);
       g.fillRect(0, 0, getWidth(), getHeight());
 
-      var hSize = getWidth() / 8;
-      var vSize = getHeight() / 8;
+      var hSize = squareWidth();
+      var vSize = squareHeight();
 
       for (var r = 0; r < 8; r++) {
         for (var c = 0; c < 8; c++) {
           if ((r + c) % 2 == 0) {
             g.setColor(white);
-            g.fillRect(c * hSize, r * vSize, hSize, vSize);
+            g.fillRect((int)(c * hSize), (int)(r * vSize), (int)hSize, (int)vSize);
           }
           if (board.hasPiece(r, c)) {
             drawPiece(g, board.getPiece(r, c).string(), r, c);
