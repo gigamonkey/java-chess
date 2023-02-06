@@ -15,7 +15,7 @@ pretty:
 resources: $(resources)
 
 run:
-	java --enable-preview --source 17 -cp classes $(main)
+	java --enable-preview -cp classes $(main)
 
 test:
 	java -cp classes com.gigamonkeys.chess.Test

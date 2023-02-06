@@ -6,18 +6,8 @@ import java.awt.event.*;
 
 public class Chess {
 
-  public final static String WHITE_KING = "♔";
-  public final static String WHITE_QUEEN = "♕";
-  public final static String WHITE_ROOK = "♖";
-  public final static String WHITE_BISHOP = "♗";
-  public final static String WHITE_KNIGHT = "♘";
-  public final static String WHITE_PAWN = "♙";
-  public final static String BLACK_KING = "♚";
-  public final static String BLACK_QUEEN = "♛";
-  public final static String BLACK_ROOK = "♜";
-  public final static String BLACK_BISHOP = "♝";
-  public final static String BLACK_KNIGHT = "♞";
-  public final static String BLACK_PAWN = "♟";
+  public final static String[] WHITE_PIECES = {"♔", "♕", "♖", "♗", "♘", "♙"};
+  public final static String[] BLACK_PIECES = {"♚", "♛", "♜", "♝", "♞", "♟"};
 
   private final static int WIDTH = 800;
   private final static int HEIGHT = 800;
@@ -36,46 +26,59 @@ public class Chess {
     frame.requestFocus();
   }
 
-  private static class Piece {
-    private final String string;
+  private static record Piece(String string) {}
 
-    Piece(String unicode) {
-      this.string = unicode;
+  public static class Square {
+
+    private Piece piece = null;
+    private final int rank;
+    private final int file;
+
+    Square(int rank, int file) {
+      this.rank = rank;
+      this.file = file;
     }
 
-    public String getString() {
-      return string;
+    public void setPiece(Piece piece) {
+      this.piece = piece;
+    }
+
+    public Piece getPiece() {
+      return this.piece;
     }
   }
 
   private static class Board {
 
-    private Piece[][] pieces = new Piece[8][8];
+    private Square[][] squares = new Square[8][8];
 
     public Board() {
-      placePiece(new Piece(BLACK_ROOK), 0, 0);
-      placePiece(new Piece(BLACK_KNIGHT), 0, 1);
-      placePiece(new Piece(BLACK_BISHOP), 0, 2);
-      placePiece(new Piece(BLACK_KING), 0, 3);
-      placePiece(new Piece(BLACK_QUEEN), 0, 4);
-      placePiece(new Piece(BLACK_BISHOP), 0, 5);
-      placePiece(new Piece(BLACK_KNIGHT), 0, 6);
-      placePiece(new Piece(BLACK_ROOK), 0, 7);
-      for (var i = 0; i < 8; i++) {
-        placePiece(new Piece(BLACK_PAWN), 1, i);
-      }
-      for (var i = 0; i < 8; i++) {
-        placePiece(new Piece(WHITE_PAWN), 6, i);
-      }
-      placePiece(new Piece(WHITE_ROOK), 7, 0);
-      placePiece(new Piece(WHITE_KNIGHT), 7, 1);
-      placePiece(new Piece(WHITE_BISHOP), 7, 2);
-      placePiece(new Piece(WHITE_KING), 7, 3);
-      placePiece(new Piece(WHITE_QUEEN), 7, 4);
-      placePiece(new Piece(WHITE_BISHOP), 7, 5);
-      placePiece(new Piece(WHITE_KNIGHT), 7, 6);
-      placePiece(new Piece(WHITE_ROOK), 7, 7);
 
+      for (var rank = 0; rank < 8; rank++) {
+        for (var file = 0; file < 8; file++) {
+          squares[rank][file] = new Square(rank, file);
+        }
+      }
+
+      placeInitialPieces(BLACK_PIECES, 1);
+      placeInitialPieces(WHITE_PIECES, 6);
+    }
+
+    public void placeInitialPieces(String[] pieces, int pawnRank) {
+
+      int pieceRank = pawnRank == 1 ? 0 : 7;
+
+      placePiece(new Piece(pieces[2]), pieceRank, 0);
+      placePiece(new Piece(pieces[4]), pieceRank, 1);
+      placePiece(new Piece(pieces[3]), pieceRank, 2);
+      placePiece(new Piece(pieces[0]), pieceRank, 3);
+      placePiece(new Piece(pieces[1]), pieceRank, 4);
+      placePiece(new Piece(pieces[3]), pieceRank, 5);
+      placePiece(new Piece(pieces[4]), pieceRank, 6);
+      placePiece(new Piece(pieces[2]), pieceRank, 7);
+      for (var i = 0; i < 8; i++) {
+        placePiece(new Piece(pieces[5]), pawnRank, i);
+      }
     }
 
     public boolean hasPiece(int rank, int file) {
@@ -83,11 +86,11 @@ public class Chess {
     }
 
     public Piece getPiece(int rank, int file) {
-      return pieces[rank][file];
+      return squares[rank][file].getPiece();
     }
 
     public void placePiece(Piece p, int rank, int file) {
-      pieces[rank][file] = p;
+      squares[rank][file].setPiece(p);
     }
   }
 
@@ -147,7 +150,7 @@ public class Chess {
             g.fillRect(c * hSize, r * vSize, hSize, vSize);
           }
           if (board.hasPiece(r, c)) {
-            drawPiece(g, board.getPiece(r, c).getString(), r, c);
+            drawPiece(g, board.getPiece(r, c).string(), r, c);
           }
         }
       }
