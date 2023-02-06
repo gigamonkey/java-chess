@@ -126,17 +126,20 @@ public class Chess {
       });
     }
 
-    public double squareSize() {
-      // FIXME: this relies on the board itself being square.
+    public double squareWidth() {
       return getWidth() / 8;
     }
 
+    public double squareHeight() {
+      return getHeight() / 8;
+    }
+
     public int rank(double y) {
-      return (int)Math.floor(y / squareSize());
+      return (int)Math.floor(y / squareHeight());
     }
 
     public int file(double x) {
-      return (int)Math.floor(x / squareSize());
+      return (int)Math.floor(x / squareWidth());
     }
 
     void maybeMove(int x, int y) {
@@ -159,7 +162,7 @@ public class Chess {
       var hSize = getWidth() / 8;
       var vSize = getHeight() / 8;
       g.setColor(Color.BLUE);
-      g.setFont(g.getFont().deriveFont((float)squareSize()));
+      g.setFont(g.getFont().deriveFont((float)squareWidth()));
       g.drawString(piece, (int)(file * hSize + hSize * 0.1), (int)(rank * vSize + vSize * 0.75));
     }
 
